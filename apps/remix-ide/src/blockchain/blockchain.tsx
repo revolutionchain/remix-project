@@ -1,7 +1,7 @@
 import React from 'react' // eslint-disable-line
 import {fromWei, toBigInt, toWei} from 'web3-utils'
 import {Plugin} from '@remixproject/engine'
-import {toBuffer, addHexPrefix} from '@ethereumjs/util'
+import {toBytes, addHexPrefix} from '@ethereumjs/util'
 import {EventEmitter} from 'events'
 import {format} from 'util'
 import {ExecutionContext} from './execution-context'
@@ -920,8 +920,8 @@ export class Blockchain extends Plugin {
         if (execResult) {
           // if it's not the VM, we don't have return value. We only have the transaction, and it does not contain the return value.
           returnValue = execResult
-            ? toBuffer(execResult.returnValue)
-            : toBuffer(addHexPrefix(txResult.result) || '0x0000000000000000000000000000000000000000000000000000000000000000')
+            ? toBytes(execResult.returnValue)
+            : toBytes(addHexPrefix(txResult.result) || '0x0000000000000000000000000000000000000000000000000000000000000000')
           const compiledContracts = await this.call('compilerArtefacts', 'getAllContractDatas')
           const vmError = txExecution.checkError({ errorMessage: execResult.exceptionError ? execResult.exceptionError.error : '', errorData: execResult.returnValue }, compiledContracts)
           if (vmError.error) {
@@ -930,7 +930,7 @@ export class Blockchain extends Plugin {
         }
       }
       if (!isVM && tx && tx.useCall) {
-        returnValue = toBuffer(addHexPrefix(txResult.result))
+        returnValue = toBytes(addHexPrefix(txResult.result))
       }
 
       let address = null

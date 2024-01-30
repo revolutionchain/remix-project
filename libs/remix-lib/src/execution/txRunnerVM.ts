@@ -1,9 +1,9 @@
 'use strict'
 import { RunBlockResult, RunTxResult } from '@ethereumjs/vm'
 import { ConsensusType } from '@ethereumjs/common'
-import { Transaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { LegacyTransaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { Block } from '@ethereumjs/block'
-import { bufferToHex, Address } from '@ethereumjs/util'
+import { bytesToHex, Address } from '@ethereumjs/util'
 import type { Account } from '@ethereumjs/util'
 import { EventManager } from '../eventManager'
 import { LogsManager } from './logsManager'
@@ -13,7 +13,7 @@ export type VMexecutionResult = {
   result: RunTxResult,
   transactionHash: string
   block: Block,
-  tx: Transaction
+  tx: LegacyTransaction
 }
 
 export type VMExecutionCallBack = (error: string | Error, result?: VMexecutionResult) => void
@@ -82,7 +82,7 @@ export class TxRunnerVM {
       const EIP1559 = this.commonContext.hardfork() !== 'berlin' // berlin is the only pre eip1559 fork that we handle.
       let tx
       if (!EIP1559) {
-        tx = Transaction.fromTxData({
+        tx = LegacyTransaction.fromTxData({
           nonce: useCall ? this.nextNonceForCall : res.nonce,
           gasPrice: '0x1',
           gasLimit: gasLimit,
@@ -119,7 +119,7 @@ export class TxRunnerVM {
           parentHash: this.blockParentHash
         },
         transactions: [tx]
-      }, { common: this.commonContext, hardforkByBlockNumber: false, hardforkByTTD: undefined })
+      }, { common: this.commonContext })
 
       if (!useCall) {
         this.blockNumber = this.blockNumber + 1
@@ -147,7 +147,7 @@ export class TxRunnerVM {
       const result: RunTxResult = results.results[0]
       callback(null, {
         result,
-        transactionHash: bufferToHex(Buffer.from(tx.hash())),
+        transactionHash: bytesToHex(Buffer.from(tx.hash())),
         block,
         tx
       })

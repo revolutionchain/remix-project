@@ -1,5 +1,5 @@
 import { toHex, toNumber, toBigInt } from 'web3-utils'
-import { toChecksumAddress, Address, bigIntToHex } from '@ethereumjs/util'
+import { toChecksumAddress, Address, bigIntToHex, bytesToHex} from '@ethereumjs/util'
 import { processTx } from './txProcess'
 import { execution } from '@remix-project/remix-lib'
 import { ethers } from 'ethers'
@@ -86,9 +86,9 @@ export class Transactions {
     processTx(this.txRunnerInstance, payload, false, (error, result: VMexecutionResult) => {
       if (!error && result) {
         this.vmContext.addBlock(result.block)
-        const hash = '0x' + result.tx.hash().toString('hex')
+        const hash = bytesToHex(result.tx.hash())
         this.vmContext.trackTx(hash, result.block, result.tx)
-        const returnValue = `0x${result.result.execResult.returnValue.toString('hex') || '0'}`
+        const returnValue = `${bytesToHex(result.result.execResult.returnValue) || '0x0'}`
         const execResult: VMExecResult = {
           exceptionError: result.result.execResult.exceptionError,
           executionGasUsed: result.result.execResult.executionGasUsed,
@@ -127,7 +127,7 @@ export class Transactions {
       const r: Record <string, unknown> = {
         transactionHash: receipt.hash,
         transactionIndex: this.TX_INDEX,
-        blockHash: '0x' + txBlock.hash().toString('hex'),
+        blockHash: bytesToHex(txBlock.hash()),
         blockNumber: bigIntToHex(txBlock.header.number),
         gasUsed: receipt.gasUsed,
         cumulativeGasUsed: receipt.gasUsed, // only 1 tx per block
@@ -161,7 +161,7 @@ export class Transactions {
       const result: any = value.result      
       if ((result as any).receipt?.status === '0x0' || (result as any).receipt?.status === 0) {
         try {
-          const msg = `0x${result.execResult.returnValue.toString('hex') || '0'}`
+          const msg = `${bytesToHex(result.execResult.returnValue) || '0x00'}`
           const abiCoder = new ethers.utils.AbiCoder()
           const reason = abiCoder.decode(['string'], '0x' + msg.slice(10))[0]
           return cb('revert ' + reason)
@@ -212,9 +212,9 @@ export class Transactions {
     processTx(this.txRunnerInstance, payload, true, (error, result: VMexecutionResult) => {
       if (!error && result) {
         this.vmContext.addBlock(result.block, null, true)
-        const hash = '0x' + result.tx.hash().toString('hex')
+        const hash = bytesToHex(result.tx.hash())
         this.vmContext.trackTx(hash, result.block, result.tx)
-        const returnValue = `0x${result.result.execResult.returnValue.toString('hex') || '0'}`
+        const returnValue = `${bytesToHex(result.result.execResult.returnValue) || '0x0'}`
         const execResult: VMExecResult = {
           exceptionError: result.result.execResult.exceptionError,
           executionGasUsed: result.result.execResult.executionGasUsed,
@@ -265,7 +265,7 @@ export class Transactions {
 
       // TODO: params to add later
       const r: Record<string, unknown> = {
-        blockHash: '0x' + txBlock.hash().toString('hex'),
+        blockHash: bytesToHex(txBlock.hash()),
         blockNumber: bigIntToHex(txBlock.header.number),
         from: receipt.from,
         gas: toHex(BigInt(receipt.gas)),
@@ -303,7 +303,7 @@ export class Transactions {
     const txIndex = payload.params[1]
 
     const txBlock = this.vmContext.blocks[payload.params[0]]
-    const txHash = '0x' + txBlock.transactions[toNumber(txIndex) as number].hash().toString('hex')
+    const txHash = bytesToHex(txBlock.transactions[toNumber(txIndex) as number].hash())
 
     this.vmContext.web3().eth.getTransactionReceipt(txHash, (error, receipt) => {
       if (error) {
@@ -314,7 +314,7 @@ export class Transactions {
 
       // TODO: params to add later
       const r: Record<string, unknown> = {
-        blockHash: '0x' + txBlock.hash().toString('hex'),
+        blockHash: bytesToHex(txBlock.hash()),
         blockNumber: bigIntToHex(txBlock.header.number),
         from: receipt.from,
         gas: toHex(BigInt(receipt.gas)),
@@ -348,7 +348,7 @@ export class Transactions {
     const txIndex = payload.params[1]
 
     const txBlock = this.vmContext.blocks[payload.params[0]]
-    const txHash = '0x' + txBlock.transactions[toNumber(txIndex) as number].hash().toString('hex')
+    const txHash = bytesToHex(txBlock.transactions[toNumber(txIndex) as number].hash())
 
     this.vmContext.web3().eth.getTransactionReceipt(txHash, (error, receipt) => {
       if (error) {
@@ -359,7 +359,7 @@ export class Transactions {
 
       // TODO: params to add later
       const r: Record<string, unknown> = {
-        blockHash: '0x' + txBlock.hash().toString('hex'),
+        blockHash: bytesToHex(txBlock.hash()),
         blockNumber: bigIntToHex(txBlock.header.number),
         from: receipt.from,
         gas: toHex(BigInt(receipt.gas)),
