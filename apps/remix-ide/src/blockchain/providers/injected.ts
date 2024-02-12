@@ -27,10 +27,6 @@ export class InjectedProvider {
     /* Do nothing. */
   }
 
-  async loadContext (context) {
-    /* Do nothing. */
-  }
-
   async getBalanceInEther (address) {
     const balance = await this.executionContext.web3().eth.getBalance(address)
     return Web3.utils.fromWei(balance.toString(10), 'ether')
