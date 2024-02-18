@@ -1,14 +1,14 @@
-import {InjectedProviderDefaultBase} from './injected-provider-default'
+import {InjectedProviderDefault} from './injected-provider-default'
 
-export class InjectedCustomProvider extends InjectedProviderDefaultBase {
+export class InjectedCustomProvider extends InjectedProviderDefault {
   chainName: string
   chainId: string
   rpcUrls: Array<string>
   nativeCurrency: Record<string, any>
   blockExplorerUrls: Array<string>
 
-  constructor(profile: any, chainName: string, chainId: string, rpcUrls: Array<string>, nativeCurrency?: Record<string, any>, blockExplorerUrls?: Array<string>) {
-    super(profile)
+  constructor(provider: any, chainName: string, chainId: string, rpcUrls: Array<string>, nativeCurrency?: Record<string, any>, blockExplorerUrls?: Array<string>) {
+    super(provider, chainName)
     this.chainName = chainName
     this.chainId = chainId
     this.rpcUrls = rpcUrls
