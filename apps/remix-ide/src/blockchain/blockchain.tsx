@@ -110,6 +110,13 @@ export class Blockchain extends Plugin {
       })
     })
 
+    this.on('injected-revolink', 'chainChanged', () => {
+      this.detectNetwork((error, network) => {
+        this.networkStatus = {network, error}
+        this._triggerEvent('networkStatus', [this.networkStatus])
+      })
+    })
+
     this.on('injected-trustwallet', 'chainChanged', () => {
       this.detectNetwork((error, network) => {
         this.networkStatus = {network, error}
@@ -128,6 +135,7 @@ export class Blockchain extends Plugin {
   onDeactivation() {
     this.active = false
     this.off('injected', 'chainChanged')
+    this.off('injected-revolink', 'chainChanged')
     this.off('injected-trustwallet', 'chainChanged')
     this.off('walletconnect', 'chainChanged')
     this.off('walletconnect', 'accountsChanged')

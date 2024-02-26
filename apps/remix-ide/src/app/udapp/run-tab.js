@@ -160,6 +160,11 @@ export class RunTab extends ViewPlugin {
       await addProvider('injected', 'Injected Provider', true, false)
     }
 
+    if (window && window.revo) {
+      const displayNameInjected = `Injected Provider - Revolink`
+      await addProvider('injected-revolink', displayNameInjected, true, false)
+    }
+
     if (window && window.trustwallet) {
       const displayNameInjected = `Injected Provider - TrustWallet`
       await addProvider('injected-trustwallet', displayNameInjected, true, false)

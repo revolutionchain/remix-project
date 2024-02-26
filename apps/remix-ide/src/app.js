@@ -38,6 +38,7 @@ import {GanacheProvider} from './app/providers/ganache-provider'
 import {FoundryProvider} from './app/providers/foundry-provider'
 import {ExternalHttpProvider} from './app/providers/external-http-provider'
 import {InjectedProviderDefault} from './app/providers/injected-provider-default'
+import {InjectedProviderRevolink} from './app/providers/injected-provider-revolink'
 import {InjectedProviderTrustWallet} from './app/providers/injected-provider-trustwallet'
 import {Injected0ptimismProvider} from './app/providers/injected-optimism-provider'
 import {InjectedArbitrumOneProvider} from './app/providers/injected-arbitrum-one-provider'
@@ -269,6 +270,7 @@ class AppComponent {
     const externalHttpProvider = new ExternalHttpProvider(blockchain)
     const trustWalletInjectedProvider = new InjectedProviderTrustWallet()
     const defaultInjectedProvider = new InjectedProviderDefault()
+    const revolinkInjectedProvider = new InjectedProviderRevolink()
     const injected0ptimismProvider = new Injected0ptimismProvider()
     const injectedArbitrumOneProvider = new InjectedArbitrumOneProvider()
     const injectedEphemeryTestnetProvider = new InjectedEphemeryTestnetProvider()
@@ -346,6 +348,7 @@ class AppComponent {
       foundryProvider,
       externalHttpProvider,
       defaultInjectedProvider,
+      revolinkInjectedProvider,
       trustWalletInjectedProvider,
       injected0ptimismProvider,
       injectedArbitrumOneProvider,

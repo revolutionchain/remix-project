@@ -52,6 +52,7 @@ let requiredModules = [ // services + layout views + system views
   'foundry-provider',
   'basic-http-provider',
   'injected',
+  'injected-revolink',
   'injected-trustwallet',
   'injected-optimism-provider',
   'injected-arbitrum-one-provider',
